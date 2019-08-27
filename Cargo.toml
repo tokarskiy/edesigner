@@ -1,0 +1,7 @@
+[package]
+name = "edesigner"
+version = "0.1.0"
+authors = ["Andrew Tokarskiy <tokarskiy.a@gmail.com>"]
+edition = "2018"
+
+[dependencies]

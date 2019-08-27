@@ -1,0 +1,69 @@
+package main; 
+import std;
+
+/* 
+ * Multi-line comment test 
+ */
+circuit Main(a, b,)
+{
+    R1[0, 1] = Resistor(12); // test comment
+    K2[1, 2] = MyElem(6); 
+    U3[2, 0] = VoltageSource(10); 
+    T1[0, 1, 2] = NPNEM.KT325A(); 
+}
+
+element [In, Out] MyElem(RValue)
+{
+    R1[In, 0] = Resistor(10); 
+    R2[0, Out] = Resistor(RValue); 
+}
+
+function func(a, b) => sin(a) + cos(b + 1); 
+function inc(a) => a + 1;
+function hello() => testFuncCall(); 
+function err_test() => - (-1 + hello()) + 2; 
+
+/*
+ *  Abstract NPNEM transistor. 
+ */
+element [H, E, K] NPNEM(RB, RE, RK, UMAX, G,
+                        IOK, TETAK, TAYK, CBK, 
+                        MK, FIK, ALFAI,
+                        IOE, TETAE, TAYE, CBE, 
+                        ME, FIE, ALFAE) {
+    
+    RB[H, 0] = Resistor(RB); 
+    RE[E, 1] = Resistor(RE); 
+    RK[K, 2] = Resistor(RK); 
+
+    JK[0, 2] = CurrentSource(std.F9(IOK, TETAK, UMAX, TAYK, CBK, G, MK, FIK / JK.U)); 
+    J2[1, 0] = CurrentSource(std.F4(ALFAI / JK.U)); 
+
+    JE[0, 2] = CurrentSource(std.F9(IOE, TETAE, UMAE, TAYE, CBE, G, ME, FIE / JE.U)); 
+    J1[1, 0] = CurrentSource(std.F4(ALFAE / JK.U)); 
+}
+
+/*
+ *  Concrete NPNEM transistor model: KT325A
+ */
+element [H, E, K] NPNEM.KT325A() {
+    N1[H, E, K] = NPNEM(0.2E-1, 
+                        0.17E-2,
+                        0.7E-3,
+                        1.2,
+                        0,
+                        0.7E-6,
+                        21, //TETAK,
+                        2.1E-3, //TAYK,
+                        2.84E-3,
+                        0.21,
+                        0.9,
+                        0.677,
+                        0.3E-3,
+                        13,
+                        0.19E-3,
+                        2.43E-3,
+                        0.35,
+                        0.9,
+                        0.978); 
+}
