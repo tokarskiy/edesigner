@@ -1,7 +1,6 @@
 use crate::entities::Token;
 use crate::commands::variant_eq;
 use crate::entities::TokenType; 
-use std::collections::HashSet;
 use std::collections::HashMap; 
 use std::fmt::Formatter;
 use std::fmt::Display; 
@@ -96,11 +95,8 @@ fn evaluate_node(node: &Node, input: &HashMap<String, f64>) -> Option<f64> {
             match is_num {
                 Ok(num) => Option::Some(num),
                 Err(_) => {
-                    let get = input.get(num_str);
-                    match get {
-                        Option::Some(x) => Option::Some(*x),
-                        Option::None => Option::None,
-                    }
+                    let get = input.get(num_str)?;
+                    Option::Some(*get)
                 }
             }
         },
@@ -113,49 +109,46 @@ fn evaluate_node(node: &Node, input: &HashMap<String, f64>) -> Option<f64> {
                 Option::None 
             }
             else {
-                let func_null = get_func(&operator.name); 
-                match func_null {
-                    Option::Some(func) => {
-                        let nums: Vec<f64> = nums.iter() 
-                            .map(|x| x.expect(""))
-                            .collect(); 
+                let func = get_func(&operator.name)?; 
+                let nums: Vec<f64> = nums.iter() 
+                    .map(|x| x.expect(""))
+                    .collect(); 
 
-                        let args = func.1; 
-                        if nums.len() != args {
-                            Option::None
-                        }   
-                        else {
-                            let func = func.0; 
-                            func(&nums)
-                        }
-                    },
-                    Option::None => Option::None,
+                if nums.len() != func.args_count {
+                    Option::None
+                }   
+                else {
+                    let f = func.lambda;
+                    f(&nums)
                 }
-
-                
             }   
         },
     }
 }  
 
 /// Returns the lambda and amount of arguments 
-fn get_func(name: &String) -> Option<(impl Fn(&Vec<f64>) -> Option<f64>, usize)> {
+fn get_func(name: &String) -> Option<Function> {
     let search_result = STANDART_FUNCTIONS
-        .binary_search_by(|&(k, _, _)| name.cmp(&String::from(k)));
+        .binary_search_by(|&f| name.cmp(&String::from(f.name)));
     
     match search_result {
         Result::Ok(index) => {
-            let tuple = STANDART_FUNCTIONS[index]; 
-            let func = tuple.2;  
-            let args_count = tuple.1; 
+            let func = STANDART_FUNCTIONS[index];
 
-            Option::Some((func, args_count))
+            Option::Some(func.clone())
         },
         Result::Err(_) => Option::None,
     }
 }
 
-const STANDART_FUNCTIONS: &'static [(&'static str, usize, &'static Fn(&Vec<f64>) -> Option<f64>); 0] = &[
+#[derive(Clone)]
+struct Function<'a> {
+    name: &'a str,
+    args_count: usize,
+    lambda: &'a Fn(&Vec<f64>) -> Option<f64>
+}
+
+const STANDART_FUNCTIONS: &'static [&'static Function] = &[
     
 ];
 
