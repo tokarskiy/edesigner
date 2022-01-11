@@ -36,7 +36,7 @@ impl ErrorEntry {
         let mut i: usize = 1; 
         let mut msg: String = self.error.message.to_string(); 
         for arg in &self.args {
-            let entry: String = format!("~{}~", i); ;  
+            let entry: String = format!("~{}~", i);
             msg = msg.replace(&entry, arg);
             //msg = std::str::replace(msg, "")
             i += 1;
@@ -46,6 +46,7 @@ impl ErrorEntry {
     }
 }
 
+#[allow(dead_code)]
 pub fn apply_file_name(errs: &Vec<ErrorEntry>, file_name: &String) -> Vec<ErrorEntry> {
     errs.iter() 
         .map(|x| ErrorEntry{

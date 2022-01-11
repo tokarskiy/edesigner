@@ -95,7 +95,7 @@ impl CommandRecognizer for CircleCommandRecognizer {
         }
 
         let mut element_entries: Vec<ElementEntryCommand> = vec![]; 
-        let recognizers: Vec<&CommandRecognizer> = vec![
+        let recognizers: Vec<&dyn CommandRecognizer> = vec![
             &ElementEntryCommandRecognizer{},
         ];
 

@@ -38,7 +38,7 @@ fn main() {
         }
     };
 
-    let token_recognizers: Vec<&TokenRecognizer> = vec!(
+    let token_recognizers: Vec<&dyn TokenRecognizer> = vec!(
         &LineCommentTokenRecognizer{},
         &BlockCommentTokenRecognizer{},
         &SymbolTokenRecognizer{},
@@ -60,7 +60,7 @@ fn main() {
 
     //print_statements(&stats);
 
-    let command_recognizers: Vec<&CommandRecognizer> = vec![
+    let command_recognizers: Vec<&dyn CommandRecognizer> = vec![
         &commands::CircleCommandRecognizer{},
         &commands::ElementCommandRecognizer{},
         &commands::PackageCommandRecognizer{},

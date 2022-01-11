@@ -109,7 +109,7 @@ pub fn get_expressions_tokens(tokens: &Vec<Token>, start: usize, end: usize) -> 
     expressions
 }
 
-pub fn get_commands(statements: &Vec<Statement>, recognizers: &Vec<&CommandRecognizer>, errs_acc: &mut Vec<ErrorEntry>) -> Vec<Command> {
+pub fn get_commands(statements: &Vec<Statement>, recognizers: &Vec<&dyn CommandRecognizer>, errs_acc: &mut Vec<ErrorEntry>) -> Vec<Command> {
     let mut cmds: Vec<Command> = vec![];
 
     'outer: for statement in statements {

@@ -78,6 +78,7 @@ impl Clone for OperatorNode {
 }
 
 impl Expression {
+    #[allow(dead_code)]
     pub fn evaluate(&self, input: &HashMap<String, f64>) -> Option<f64> {
         match self.root.clone() {
             Option::Some(node) => {
@@ -88,6 +89,7 @@ impl Expression {
     }
 }
 
+#[allow(dead_code)]
 fn evaluate_node(node: &Node, input: &HashMap<String, f64>) -> Option<f64> {
     match node {
         Node::Number(num_str) => {
@@ -145,7 +147,7 @@ fn get_func(name: &String) -> Option<Function> {
 struct Function<'a> {
     name: &'a str,
     args_count: usize,
-    lambda: &'a Fn(&Vec<f64>) -> Option<f64>
+    lambda: &'a dyn Fn(&Vec<f64>) -> Option<f64>
 }
 
 const STANDART_FUNCTIONS: &'static [&'static Function] = &[

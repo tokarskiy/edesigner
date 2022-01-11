@@ -36,7 +36,7 @@ fn collect_code_chars(code: String) -> Vec<CodeChar> {
     code_chars
 }
 
-pub fn tokenize(code: String, recognizers: &Vec<&TokenRecognizer>, errs_acc: &mut Vec<ErrorEntry>) -> Vec<Token> {
+pub fn tokenize(code: String, recognizers: &Vec<&dyn TokenRecognizer>, errs_acc: &mut Vec<ErrorEntry>) -> Vec<Token> {
     let code_chars = collect_code_chars(code);
     let code_chars = &code_chars; 
     let mut tokens: Vec<Token> = Vec::new(); 
